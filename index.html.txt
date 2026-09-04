@@ -1,0 +1,2045 @@
+
+cat > gate-a-mation-demo.html << 'EOF'
+<!DOCTYPE html>
+<html data-host-mode="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+    Object.defineProperty(document, "cookie", {
+        get: function() {
+            return "";
+        },
+        set: function() {},
+        configurable: false
+    });
+    </script>
+    <script type="module">(async()=>{if(typeof FileSystemFileHandle!=="undefined"&&"createWritable"in FileSystemFileHandle.prototype)return;if(!navigator.storage?.getDirectory)return;try{const{createWorker}=await import("https://esm.sh/opfs-worker");const w=await createWorker();class W{constructor(p){this.p=p;this.c=[];this.x=false}write(d){if(this.x)throw new DOMException("closed","InvalidStateError");if(typeof d==="object"&&"type"in d&&!(d instanceof Blob)&&!(d instanceof ArrayBuffer)){if(d.type==="write")this.c.push(d.data);else if(d.type==="truncate")this.c=[];return}this.c.push(d)}async close(){if(this.x)return;const b=new Blob(this.c);await w.writeFile(this.p,new Uint8Array(await b.arrayBuffer()));this.x=true;this.c=[]}abort(){this.x=true;this.c=[]}}const pF=(h,p)=>new Proxy(h,{get:(t,k)=>k==="createWritable"?async()=>new W(p):typeof t[k]==="function"?t[k].bind(t):t[k]});const pD=(h,p)=>new Proxy(h,{get:(t,k)=>{if(k==="getFileHandle")return async(n,o)=>pF(await t.getFileHandle(n,o),(p+"/"+n).replace(//+/g,"/"));if(k==="getDirectoryHandle")return async(n,o)=>pD(await t.getDirectoryHandle(n,o),(p+"/"+n).replace(//+/g,"/"));return typeof t[k]==="function"?t[k].bind(t):t[k]}});const og=navigator.storage.getDirectory.bind(navigator.storage);navigator.storage.getDirectory=async function(){return pD(await og.call(this),"/")};}catch(e){console.warn("[OPFS]",e)}})();</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --host-bg: rgb(250, 248, 243);
+        --host-fg: rgb(27, 25, 19);
+        --host-fg-muted: rgb(78, 74, 63);
+        --host-card: rgb(255, 254, 250);
+        --host-card-fg: rgb(27, 25, 19);
+        --host-input: rgb(255, 254, 250);
+        --host-muted: rgba(0, 0, 0, 0.04);
+        --host-border: rgba(0, 0, 0, 0.08);
+        --host-border-hover: rgba(0, 0, 0, 0.14);
+        --host-primary: rgb(18, 92, 161);
+        --host-secondary: rgba(0, 0, 0, 0.04);
+        --host-secondary-fg: rgb(27, 25, 19);
+        --host-success: #22c55e;
+        --host-error: #ef4444;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root, html, body {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: visible;
+        background: transparent;
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+    }
+
+    #sandbox-content {
+        width: 100%;
+    }
+
+    @media (max-width: 640px) {
+        :where(#sandbox-content svg, #sandbox-content img) {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="sandbox-content">
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Gate-A-Mation | Intelligent Automated Gate Systems</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+            <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --primary: #1e3a5f;
+                --primary-light: #2d5a8f;
+                --accent: #c9a227;
+                --accent-light: #e8d5a3;
+                --text: #1f2937;
+                --text-light: #6b7280;
+                --bg: #ffffff;
+                --bg-alt: #f8fafc;
+                --border: #e5e7eb;
+                --success: #22c55e;
+                --gradient: linear-gradient(135deg, #1e3a5f 0%, #2d5a8f 100%);
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                color: var(--text);
+                line-height: 1.6;
+                background: var(--bg);
+            }/* Navigation */
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border);
+                z-index: 1000;
+                transition: all 0.3s ease;
+            }
+
+            .navbar.scrolled {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            .nav-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 1rem 2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .logo {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--primary);
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                background: var(--gradient);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.25rem;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 2.5rem;
+                list-style: none;
+            }
+
+            .nav-links a {
+                color: var(--text);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.95rem;
+                transition: color 0.3s;
+                position: relative;
+            }
+
+            .nav-links a:hover {
+                color: var(--primary);
+            }
+
+            .nav-links a::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--accent);
+                transition: width 0.3s;
+            }
+
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+
+            .nav-cta {
+                background: var(--gradient);
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s;
+                border: none;
+                cursor: pointer;
+            }
+
+            .nav-cta:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
+            }
+
+            .mobile-menu-btn {
+                display: none;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: var(--primary);
+            }/* Hero Section */
+
+            .hero {
+                min-height: 100vh;
+                background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2d5a8f 100%);
+                display: flex;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                padding-top: 80px;
+            }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                opacity: 0.5;
+            }
+
+            .hero-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 2rem;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: center;
+                position: relative;
+                z-index: 1;
+            }
+
+            .hero-content h1 {
+                font-family: 'Playfair Display', serif;
+                font-size: 4rem;
+                font-weight: 700;
+                color: white;
+                line-height: 1.1;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-content h1 span {
+                color: var(--accent);
+            }
+
+            .hero-subtitle {
+                font-size: 1.25rem;
+                color: rgba(255, 255, 255, 0.8);
+                margin-bottom: 2rem;
+                max-width: 500px;
+            }
+
+            .hero-buttons {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .btn-primary {
+                background: var(--accent);
+                color: var(--primary);
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                border: none;
+                cursor: pointer;
+            }
+
+            .btn-primary:hover {
+                background: var(--accent-light);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(201, 162, 39, 0.3);
+            }
+
+            .btn-secondary {
+                background: transparent;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                transition: all 0.3s;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                cursor: pointer;
+            }
+
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: white;
+            }
+
+            .hero-visual {
+                position: relative;
+            }
+
+            .hero-image {
+                width: 100%;
+                border-radius: 20px;
+                box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+                position: relative;
+                z-index: 1;
+            }
+
+            .floating-card {
+                position: absolute;
+                background: white;
+                border-radius: 16px;
+                padding: 1.5rem;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                z-index: 2;
+            }
+
+            .floating-card.ai {
+                top: -20px;
+                right: -30px;
+                animation: float 6s ease-in-out infinite;
+            }
+
+            .floating-card.security {
+                bottom: 40px;
+                left: -40px;
+                animation: float 6s ease-in-out infinite 1s;
+            }
+
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .floating-card h4 {
+                font-size: 0.875rem;
+                color: var(--text-light);
+                margin-bottom: 0.5rem;
+            }
+
+            .floating-card .value {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--primary);
+            }/* Stats Bar */
+
+            .stats-bar {
+                background: var(--bg-alt);
+                border-bottom: 1px solid var(--border);
+                padding: 2rem 0;
+            }
+
+            .stats-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+
+            .stat-item {
+                text-align: center;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--primary);
+                font-family: 'Playfair Display', serif;
+            }
+
+            .stat-label {
+                font-size: 0.875rem;
+                color: var(--text-light);
+                margin-top: 0.25rem;
+            }/* Services Section */
+
+            .services {
+                padding: 6rem 0;
+                background: var(--bg);
+            }
+
+            .section-header {
+                text-align: center;
+                max-width: 700px;
+                margin: 0 auto 4rem;
+                padding: 0 2rem;
+            }
+
+            .section-tag {
+                display: inline-block;
+                background: rgba(30, 58, 95, 0.1);
+                color: var(--primary);
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.875rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+
+            .section-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 3rem;
+                font-weight: 700;
+                color: var(--text);
+                margin-bottom: 1rem;
+            }
+
+            .section-subtitle {
+                font-size: 1.125rem;
+                color: var(--text-light);
+            }
+
+            .services-grid {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .service-card {
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 2rem;
+                transition: all 0.3s;
+                cursor: pointer;
+            }
+
+            .service-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                border-color: var(--primary-light);
+            }
+
+            .service-icon {
+                width: 60px;
+                height: 60px;
+                background: var(--gradient);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .service-card h3 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                color: var(--text);
+            }
+
+            .service-card p {
+                color: var(--text-light);
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .service-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: var(--primary);
+                font-weight: 600;
+                margin-top: 1rem;
+                text-decoration: none;
+                transition: gap 0.3s;
+            }
+
+            .service-link:hover {
+                gap: 0.75rem;
+            }/* AI Configurator Section */
+
+            .configurator {
+                padding: 6rem 0;
+                background: var(--bg-alt);
+            }
+
+            .configurator-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: start;
+            }
+
+            .configurator-form {
+                background: white;
+                border-radius: 20px;
+                padding: 2.5rem;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            }
+
+            .configurator-form h3 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            .configurator-form > p {
+                color: var(--text-light);
+                margin-bottom: 2rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+            .form-group label {
+                display: block;
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+                color: var(--text);
+            }
+
+            .form-group select, .form-group input {
+                width: 100%;
+                padding: 0.875rem 1rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: border-color 0.3s;
+                font-family: inherit;
+            }
+
+            .form-group select:focus, .form-group input:focus {
+                outline: none;
+                border-color: var(--primary);
+            }
+
+            .dimension-inputs {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .feature-checkbox {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .feature-checkbox:hover {
+                border-color: var(--primary-light);
+                background: rgba(30, 58, 95, 0.02);
+            }
+
+            .feature-checkbox input {
+                width: auto;
+            }
+
+            .btn-analyze {
+                width: 100%;
+                background: var(--gradient);
+                color: white;
+                padding: 1rem;
+                border: none;
+                border-radius: 8px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .btn-analyze:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(30, 58, 95, 0.3);
+            }
+
+            .btn-analyze:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+
+            .configurator-result {
+                background: white;
+                border-radius: 20px;
+                padding: 2.5rem;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+                display: none;
+            }
+
+            .configurator-result.active {
+                display: block;
+                animation: fadeIn 0.5s ease;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .result-header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .result-icon {
+                width: 50px;
+                height: 50px;
+                background: rgba(34, 197, 94, 0.1);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--success);
+                font-size: 1.5rem;
+            }
+
+            .recommendation-card {
+                background: var(--bg-alt);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .recommendation-card h4 {
+                font-size: 0.875rem;
+                color: var(--text-light);
+                margin-bottom: 0.5rem;
+            }
+
+            .recommendation-card .value {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+            .price-display {
+                background: var(--gradient);
+                color: white;
+                border-radius: 12px;
+                padding: 1.5rem;
+                text-align: center;
+                margin-top: 1.5rem;
+            }
+
+            .price-display .label {
+                font-size: 0.875rem;
+                opacity: 0.9;
+            }
+
+            .price-display .price {
+                font-size: 2.5rem;
+                font-weight: 700;
+                font-family: 'Playfair Display', serif;
+            }/* Why Choose Us */
+
+            .why-us {
+                padding: 6rem 0;
+                background: var(--bg);
+            }
+
+            .why-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: center;
+            }
+
+            .why-content h2 {
+                font-family: 'Playfair Display', serif;
+                font-size: 2.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .why-content > p {
+                color: var(--text-light);
+                font-size: 1.125rem;
+                margin-bottom: 2rem;
+            }
+
+            .feature-list {
+                list-style: none;
+            }
+
+            .feature-list li {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .feature-list .icon {
+                width: 40px;
+                height: 40px;
+                background: rgba(34, 197, 94, 0.1);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--success);
+                flex-shrink: 0;
+            }
+
+            .feature-list h4 {
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+            }
+
+            .feature-list p {
+                color: var(--text-light);
+                font-size: 0.95rem;
+            }
+
+            .why-image {
+                position: relative;
+            }
+
+            .why-image img {
+                width: 100%;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            }
+
+            .experience-badge {
+                position: absolute;
+                bottom: -20px;
+                left: -20px;
+                background: var(--accent);
+                color: var(--primary);
+                padding: 1.5rem 2rem;
+                border-radius: 16px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(201, 162, 39, 0.3);
+            }
+
+            .experience-badge .years {
+                font-size: 3rem;
+                font-weight: 700;
+                font-family: 'Playfair Display', serif;
+                line-height: 1;
+            }
+
+            .experience-badge .text {
+                font-size: 0.875rem;
+                font-weight: 600;
+            }/* Testimonials */
+
+            .testimonials {
+                padding: 6rem 0;
+                background: var(--bg-alt);
+            }
+
+            .testimonials-grid {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .testimonial-card {
+                background: white;
+                border-radius: 16px;
+                padding: 2rem;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            }
+
+            .stars {
+                color: var(--accent);
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .testimonial-text {
+                color: var(--text);
+                font-size: 1rem;
+                line-height: 1.7;
+                margin-bottom: 1.5rem;
+            }
+
+            .testimonial-author {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .author-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: var(--gradient);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: 600;
+                font-size: 1.25rem;
+            }
+
+            .author-info h4 {
+                font-weight: 600;
+                margin-bottom: 0.25rem;
+            }
+
+            .author-info p {
+                color: var(--text-light);
+                font-size: 0.875rem;
+            }/* CTA Section */
+
+            .cta {
+                padding: 6rem 0;
+                background: var(--gradient);
+                text-align: center;
+            }
+
+            .cta-container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+
+            .cta h2 {
+                font-family: 'Playfair Display', serif;
+                font-size: 3rem;
+                color: white;
+                margin-bottom: 1rem;
+            }
+
+            .cta p {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
+            }
+
+            .cta-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .btn-white {
+                background: white;
+                color: var(--primary);
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+
+            .btn-white:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn-outline-white {
+                background: transparent;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                transition: all 0.3s;
+            }
+
+            .btn-outline-white:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: white;
+            }/* Footer */
+
+            .footer {
+                background: #0f172a;
+                color: white;
+                padding: 4rem 0 2rem;
+            }
+
+            .footer-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: 2fr repeat(3, 1fr);
+                gap: 4rem;
+            }
+
+            .footer-brand p {
+                color: rgba(255, 255, 255, 0.7);
+                margin: 1rem 0;
+                line-height: 1.7;
+            }
+
+            .social-links {
+                display: flex;
+                gap: 1rem;
+            }
+
+            .social-links a {
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                text-decoration: none;
+                transition: all 0.3s;
+            }
+
+            .social-links a:hover {
+                background: var(--accent);
+                color: var(--primary);
+            }
+
+            .footer-links h4 {
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+            }
+
+            .footer-links ul {
+                list-style: none;
+            }
+
+            .footer-links li {
+                margin-bottom: 0.75rem;
+            }
+
+            .footer-links a {
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+            .footer-links a:hover {
+                color: var(--accent);
+            }
+
+            .footer-bottom {
+                max-width: 1400px;
+                margin: 3rem auto 0;
+                padding: 2rem 2rem 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: rgba(255, 255, 255, 0.5);
+                font-size: 0.875rem;
+            }/* Chat Widget */
+
+            .chat-widget {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                z-index: 999;
+            }
+
+            .chat-button {
+                width: 60px;
+                height: 60px;
+                background: var(--gradient);
+                border-radius: 50%;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                box-shadow: 0 10px 30px rgba(30, 58, 95, 0.3);
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .chat-button:hover {
+                transform: scale(1.1);
+            }
+
+            .chat-window {
+                position: absolute;
+                bottom: 80px;
+                right: 0;
+                width: 380px;
+                height: 500px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+                display: none;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .chat-window.active {
+                display: flex;
+            }
+
+            .chat-header {
+                background: var(--gradient);
+                color: white;
+                padding: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .chat-header-avatar {
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+            }
+
+            .chat-header h4 {
+                font-weight: 600;
+            }
+
+            .chat-header p {
+                font-size: 0.75rem;
+                opacity: 0.8;
+            }
+
+            .chat-messages {
+                flex: 1;
+                padding: 1.5rem;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .message {
+                max-width: 80%;
+                padding: 1rem;
+                border-radius: 12px;
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            .message.bot {
+                background: var(--bg-alt);
+                align-self: flex-start;
+                border-bottom-left-radius: 4px;
+            }
+
+            .message.user {
+                background: var(--gradient);
+                color: white;
+                align-self: flex-end;
+                border-bottom-right-radius: 4px;
+            }
+
+            .chat-input {
+                padding: 1rem 1.5rem;
+                border-top: 1px solid var(--border);
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .chat-input input {
+                flex: 1;
+                padding: 0.75rem 1rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                font-family: inherit;
+                font-size: 0.9rem;
+            }
+
+            .chat-input button {
+                width: 44px;
+                height: 44px;
+                background: var(--gradient);
+                border: none;
+                border-radius: 8px;
+                color: white;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }/* Responsive */
+
+            @media (max-width: 1024px) {
+                .hero-container {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                }
+
+                .hero-content h1 {
+                    font-size: 3rem;
+                }
+
+                .hero-subtitle {
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                .hero-buttons {
+                    justify-content: center;
+                }
+
+                .hero-visual {
+                    order: -1;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }
+
+                .services-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .configurator-container, .why-container {
+                    grid-template-columns: 1fr;
+                }
+
+                .testimonials-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .footer-container {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 768px) {
+                .nav-links {
+                    display: none;
+                }
+
+                .mobile-menu-btn {
+                    display: block;
+                }
+
+                .hero-content h1 {
+                    font-size: 2.5rem;
+                }
+
+                .stats-container {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .services-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .section-title {
+                    font-size: 2rem;
+                }
+
+                .footer-container {
+                    grid-template-columns: 1fr;
+                    gap: 2rem;
+                }
+
+                .footer-bottom {
+                    flex-direction: column;
+                    gap: 1rem;
+                    text-align: center;
+                }
+
+                .chat-window {
+                    width: calc(100vw - 2rem);
+                    right: -1rem;
+                }
+            }/* Loading Animation */
+
+            .loading {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top-color: white;
+                animation: spin 1s ease-in-out infinite;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }/* Toast Notification */
+
+            .toast {
+                position: fixed;
+                bottom: 2rem;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: var(--text);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 8px;
+                font-weight: 500;
+                opacity: 0;
+                transition: all 0.3s;
+                z-index: 10000;
+            }
+
+            .toast.show {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+            </style>
+        </head>
+        <body>
+            <!-- Navigation -->
+            <nav class="navbar" id="navbar">
+                <div class="nav-container">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">⚡</div>
+
+                                        Gate-A-Mation
+                                    
+                    </a>
+                    <ul class="nav-links">
+                        <li>
+                            <a href="#services">Services</a>
+                        </li>
+                        <li>
+                            <a href="#configurator">AI Configurator</a>
+                        </li>
+                        <li>
+                            <a href="#why-us">Why Us</a>
+                        </li>
+                        <li>
+                            <a href="#testimonials">Reviews</a>
+                        </li>
+                        <li>
+                            <a href="#contact">Contact</a>
+                        </li>
+                    </ul>
+                    <a href="#configurator" class="nav-cta">Get Quote</a>
+                    <button class="mobile-menu-btn">☰</button>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-container">
+                    <div class="hero-content">
+                        <h1>
+                            Intelligent 
+                            <span>Automated</span>
+                             Gate Systems
+                        </h1>
+                        <p class="hero-subtitle">Secure. Stylish. Seamless. Experience the future of property access with AI-powered gate automation, predictive maintenance, and 24/7 intelligent monitoring.</p>
+                        <div class="hero-buttons">
+                            <a href="#configurator" class="btn-primary">Design Your Gate →</a>
+                            <a href="#services" class="btn-secondary">Explore Services</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="floating-card ai">
+                            <h4>AI Processing</h4>
+                            <div class="value">94ms</div>
+                        </div>
+                        <div class="floating-card security">
+                            <h4>Security Score</h4>
+                            <div class="value">99.9%</div>
+                        </div>
+                        <svg class="hero-image" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Modern Gate Illustration -->
+                            <defs>
+                                <linearGradient id="gateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1"/>
+                                    <stop offset="100%" style="stop-color:#2d5a8f;stop-opacity:1"/>
+                                </linearGradient>
+                                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#c9a227;stop-opacity:1"/>
+                                    <stop offset="100%" style="stop-color:#e8d5a3;stop-opacity:1"/>
+                                </linearGradient>
+                                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="10" stdDeviation="20" flood-opacity="0.3"/>
+                                </filter>
+                            </defs>
+
+                            <!-- Background -->
+                            <rect x="0" y="0" width="600" height="400" rx="20" fill="#f8fafc"/>
+
+                            <!-- Ground -->
+                            <rect x="0" y="300" width="600" height="100" fill="#e5e7eb"/>
+
+                            <!-- Gate Posts -->
+                            <rect x="80" y="100" width="40" height="200" fill="url(#gateGrad)" rx="4"/>
+                            <rect x="480" y="100" width="40" height="200" fill="url(#gateGrad)" rx="4"/>
+
+                            <!-- Gate Leaves -->
+                            <rect x="130" y="120" width="165" height="160" fill="url(#gateGrad)" rx="8" opacity="0.9"/>
+                            <rect x="305" y="120" width="165" height="160" fill="url(#gateGrad)" rx="8" opacity="0.9"/>
+
+                            <!-- Decorative Elements -->
+                            <circle cx="212" cy="200" r="40" fill="none" stroke="url(#goldGrad)" stroke-width="3"/>
+                            <circle cx="388" cy="200" r="40" fill="none" stroke="url(#goldGrad)" stroke-width="3"/>
+
+                            <!-- Horizontal Bars -->
+                            <rect x="140" y="150" width="145" height="8" fill="url(#goldGrad)" rx="4"/>
+                            <rect x="140" y="242" width="145" height="8" fill="url(#goldGrad)" rx="4"/>
+                            <rect x="315" y="150" width="145" height="8" fill="url(#goldGrad)" rx="4"/>
+                            <rect x="315" y="242" width="145" height="8" fill="url(#goldGrad)" rx="4"/>
+
+                            <!-- Control Box -->
+                            <rect x="500" y="250" width="60" height="80" fill="#374151" rx="4"/>
+                            <circle cx="530" cy="275" r="15" fill="#22c55e"/>
+                            <rect x="510" y="300" width="40" height="4" fill="#6b7280" rx="2"/>
+                            <rect x="510" y="310" width="40" height="4" fill="#6b7280" rx="2"/>
+
+                            <!-- Sensor -->
+                            <rect x="250" y="80" width="100" height="20" fill="#374151" rx="10"/>
+                            <circle cx="300" cy="90" r="5" fill="#ef4444">
+                                <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+
+                            <!-- WiFi Signal -->
+                            <path d="M 520 180 Q 530 170 540 180" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.6">
+                                <animate attributeName="d" values="M 520 180 Q 530 170 540 180;M 515 175 Q 530 160 545 175;M 520 180 Q 530 170 540 180" dur="2s" repeatCount="indefinite"/>
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Bar -->
+            <section class="stats-bar">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number">37+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15K+</div>
+                        <div class="stat-label">Installations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="services" id="services">
+                <div class="section-header">
+                    <span class="section-tag">Our Services</span>
+                    <h2 class="section-title">Complete Gate Solutions</h2>
+                    <p class="section-subtitle">From initial consultation to ongoing maintenance, we provide end-to-end automated gate services powered by cutting-edge AI technology.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">🏠</div>
+                        <h3>Residential Installation</h3>
+                        <p>Smart gate systems designed for homes, featuring biometric access, smartphone control, and seamless integration with your existing security ecosystem.</p>
+                        <a href="#" class="service-link">Learn more →</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🏢</div>
+                        <h3>Commercial Solutions</h3>
+                        <p>Enterprise-grade automation for businesses, including ANPR recognition, visitor management, and multi-site centralized control.</p>
+                        <a href="#" class="service-link">Learn more →</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🔧</div>
+                        <h3>AI Maintenance</h3>
+                        <p>Predictive maintenance powered by machine learning. We detect issues before they occur, minimizing downtime and extending system lifespan.</p>
+                        <a href="#" class="service-link">Learn more →</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">⚡</div>
+                        <h3>Emergency Repairs</h3>
+                        <p>24/7 SOS response team with remote diagnostics capability. 70% of issues resolved remotely without site visits.</p>
+                        <a href="#" class="service-link">Learn more →</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🎨</div>
+                        <h3>Custom Design</h3>
+                        <p>Bespoke gate fabrication using premium materials. From traditional wrought iron to modern aluminum composites with smart coatings.</p>
+                        <a href="#" class="service-link">Learn more →</a>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🔄</div>
+                        <h3>System Upgrades</h3>
+                        <p>Modernize existing gates with AI retrofit kits. Add smartphone control, video intercom, and predictive analytics to any system.</p>
+                        <a href="#" class="service-link">Learn more →</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Configurator Section -->
+            <section class="configurator" id="configurator">
+                <div class="section-header">
+                    <span class="section-tag">AI Powered</span>
+                    <h2 class="section-title">Design Your Perfect Gate</h2>
+                    <p class="section-subtitle">Our AI configurator analyzes your requirements and recommends the optimal gate system with instant pricing.</p>
+                </div>
+                <div class="configurator-container">
+                    <div class="configurator-form">
+                        <h3>Gate Requirements</h3>
+                        <p>Tell us about your property and we'll generate a custom recommendation.</p>
+
+                        <form id="gateForm">
+                            <div class="form-group">
+                                <label>Property Type</label>
+                                <select id="propertyType" required>
+                                    <option value="">Select property type...</option>
+                                    <option value="residential">Residential Home</option>
+                                    <option value="estate">Private Estate</option>
+                                    <option value="commercial">Commercial Property</option>
+                                    <option value="industrial">Industrial Site</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Opening Dimensions</label>
+                                <div class="dimension-inputs">
+                                    <input type="number" id="width" placeholder="Width (m)" min="1" max="20" step="0.1" required>
+                                    <input type="number" id="height" placeholder="Height (m)" min="1" max="5" step="0.1" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Preferred Style</label>
+                                <select id="style" required>
+                                    <option value="">Select style...</option>
+                                    <option value="modern">Modern / Contemporary</option>
+                                    <option value="traditional">Traditional / Classic</option>
+                                    <option value="ornate">Ornate / Decorative</option>
+                                    <option value="minimalist">Minimalist</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Smart Features (select all that apply)</label>
+                                <div class="features-grid">
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="biometric" name="features">
+                                        <span>Biometric Access</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="anpr" name="features">
+                                        <span>ANPR Camera</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="intercom" name="features">
+                                        <span>Video Intercom</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="solar" name="features">
+                                        <span>Solar Power</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="app" name="features">
+                                        <span>Smartphone App</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="ev" name="features">
+                                        <span>EV Charging</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="led" name="features">
+                                        <span>LED Lighting</span>
+                                    </label>
+                                    <label class="feature-checkbox">
+                                        <input type="checkbox" value="wifi" name="features">
+                                        <span>WiFi Gateway</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Security Level Required</label>
+                                <select id="security" required>
+                                    <option value="">Select security level...</option>
+                                    <option value="standard">Standard (Residential)</option>
+                                    <option value="enhanced">Enhanced (Commercial)</option>
+                                    <option value="maximum">Maximum (High Security)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn-analyze" id="analyzeBtn">
+                                <span>🤖 Analyze with AI</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="configurator-result" id="resultPanel">
+                        <div class="result-header">
+                            <div class="result-icon">✓</div>
+                            <div>
+                                <h3>AI Recommendation Ready</h3>
+                                <p style="color: var(--text-light); font-size: 0.9rem;">Optimized for your requirements</p>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h4>Recommended Gate Type</h4>
+                            <div class="value" id="gateType">Swing Gate (Dual Leaf)</div>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h4>Material & Finish</h4>
+                            <div class="value" id="material">Aluminum with Powder Coat</div>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h4>Operator System</h4>
+                            <div class="value" id="operator">Underground RAM (Quiet)</div>
+                        </div>
+
+                        <div class="recommendation-card">
+                            <h4>AI Insights</h4>
+                            <div class="value" id="insights" style="font-size: 0.95rem; font-weight: 400;">
+                                                    Based on your 4m opening and modern style preference, a dual-leaf swing gate offers optimal balance of aesthetics and functionality. Underground operators maintain clean sightlines.
+                                                </div>
+                        </div>
+
+                        <div class="price-display">
+                            <div class="label">Estimated Investment</div>
+                            <div class="price" id="price">£18,500</div>
+                            <div style="font-size: 0.875rem; opacity: 0.9; margin-top: 0.5rem;">
+                                                    Includes installation & 2-year warranty
+                                                </div>
+                        </div>
+
+                        <button class="btn-analyze" style="margin-top: 1.5rem;">
+                                            📋 Request Detailed Quote
+                                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Us -->
+            <section class="why-us" id="why-us">
+                <div class="why-container">
+                    <div class="why-content">
+                        <span class="section-tag">Why Gate-A-Mation</span>
+                        <h2>Four Decades of Engineering Excellence</h2>
+                        <p>Since 1988, we've been at the forefront of automated entrance technology. Our AI-powered platform represents the next evolution in gate automation.</p>
+
+                        <ul class="feature-list">
+                            <li>
+                                <div class="icon">🧠</div>
+                                <div>
+                                    <h4>AI-Powered Diagnostics</h4>
+                                    <p>Predictive maintenance detects issues 30 days before failure, preventing costly emergency repairs.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="icon">🔒</div>
+                                <div>
+                                    <h4>Privacy-First Architecture</h4>
+                                    <p>Edge computing keeps your data local. 87% of processing happens on-device, not in the cloud.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="icon">⚡</div>
+                                <div>
+                                    <h4>Sub-100ms Response</h4>
+                                    <p>WebRTC + edge AI delivers near-instantaneous gate operation and safety response.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="icon">🌱</div>
+                                <div>
+                                    <h4>Sustainable by Design</h4>
+                                    <p>Solar integration, regenerative braking, and 60% lower energy consumption vs traditional systems.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="why-image">
+                        <svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                            <defs>
+                                <linearGradient id="teamGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#1e3a5f"/>
+                                    <stop offset="100%" style="stop-color:#2d5a8f"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="500" height="400" fill="#f8fafc" rx="20"/>
+
+                            <!-- Team Illustration -->
+                            <circle cx="150" cy="150" r="60" fill="url(#teamGrad)" opacity="0.1"/>
+                            <circle cx="350" cy="150" r="60" fill="url(#teamGrad)" opacity="0.1"/>
+                            <circle cx="250" cy="280" r="80" fill="url(#teamGrad)" opacity="0.1"/>
+
+                            <!-- Person 1 -->
+                            <circle cx="150" cy="130" r="30" fill="#c9a227"/>
+                            <rect x="120" y="170" width="60" height="80" fill="#1e3a5f" rx="10"/>
+
+                            <!-- Person 2 -->
+                            <circle cx="350" cy="130" r="30" fill="#c9a227"/>
+                            <rect x="320" y="170" width="60" height="80" fill="#1e3a5f" rx="10"/>
+
+                            <!-- Person 3 -->
+                            <circle cx="250" cy="240" r="40" fill="#c9a227"/>
+                            <rect x="210" y="290" width="80" height="100" fill="#1e3a5f" rx="10"/>
+
+                            <!-- Connection Lines -->
+                            <line x1="180" y1="180" x2="220" y2="240" stroke="#c9a227" stroke-width="3" opacity="0.5"/>
+                            <line x1="320" y1="180" x2="280" y2="240" stroke="#c9a227" stroke-width="3" opacity="0.5"/>
+
+                            <!-- Checkmarks -->
+                            <circle cx="100" cy="350" r="15" fill="#22c55e"/>
+                            <text x="100" y="355" text-anchor="middle" fill="white" font-size="14" font-weight="bold">✓</text>
+
+                            <circle cx="250" cy="380" r="15" fill="#22c55e"/>
+                            <text x="250" y="385" text-anchor="middle" fill="white" font-size="14" font-weight="bold">✓</text>
+
+                            <circle cx="400" cy="350" r="15" fill="#22c55e"/>
+                            <text x="400" y="355" text-anchor="middle" fill="white" font-size="14" font-weight="bold">✓</text>
+                        </svg>
+                        <div class="experience-badge">
+                            <div class="years">37</div>
+                            <div class="text">
+                                Years of
+                                <br>
+                                Excellence
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="testimonials" id="testimonials">
+                <div class="section-header">
+                    <span class="section-tag">Testimonials</span>
+                    <h2 class="section-title">What Our Clients Say</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"The AI configurator was incredible - it recommended exactly what we needed for our estate. Installation was seamless and the smartphone control is a game-changer."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">JD</div>
+                            <div class="author-info">
+                                <h4>James Davidson</h4>
+                                <p>Windsor Estate Owner</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"We've used Gate-A-Mation for our commercial properties for 15 years. Their predictive maintenance has saved us thousands in emergency repairs."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">SM</div>
+                            <div class="author-info">
+                                <h4>Sarah Mitchell</h4>
+                                <p>Property Director, London</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">"The remote diagnostics feature is brilliant. They fixed an issue before I even noticed there was a problem. True 21st century service."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">RK</div>
+                            <div class="author-info">
+                                <h4>Robert Kumar</h4>
+                                <p>Homeowner, Surrey</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta" id="contact">
+                <div class="cta-container">
+                    <h2>Ready to Secure Your Property?</h2>
+                    <p>Get a free consultation and AI-generated quote in minutes. Our team is ready to design your perfect automated entrance.</p>
+                    <div class="cta-buttons">
+                        <a href="#configurator" class="btn-white">Start AI Configurator</a>
+                        <a href="tel:01483747373" class="btn-outline-white">📞 01483 747373</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-container">
+                    <div class="footer-brand">
+                        <a href="#" class="logo" style="color: white;">
+                            <div class="logo-icon">⚡</div>
+
+                                                Gate-A-Mation
+                                            
+                        </a>
+                        <p>Intelligent automated gate systems for residential and commercial properties. Securing London and the Home Counties since 1988.</p>
+                        <div class="social-links">
+                            <a href="#">in</a>
+                            <a href="#">X</a>
+                            <a href="#">f</a>
+                            <a href="#">📷</a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Services</h4>
+                        <ul>
+                            <li>
+                                <a href="#">Residential Installation</a>
+                            </li>
+                            <li>
+                                <a href="#">Commercial Solutions</a>
+                            </li>
+                            <li>
+                                <a href="#">AI Maintenance</a>
+                            </li>
+                            <li>
+                                <a href="#">Emergency Repairs</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Company</h4>
+                        <ul>
+                            <li>
+                                <a href="#">About Us</a>
+                            </li>
+                            <li>
+                                <a href="#">Our Team</a>
+                            </li>
+                            <li>
+                                <a href="#">Careers</a>
+                            </li>
+                            <li>
+                                <a href="#">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Contact</h4>
+                        <ul>
+                            <li>11 Cherry Street</li>
+                            <li>Woking, Surrey GU21 6EE</li>
+                            <li>📞 01483 747373</li>
+                            <li>✉️ sales@gate-a-mation.com</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Gate-A-Mation Services Ltd. All rights reserved.</p>
+                    <p>Privacy Policy | Terms of Service | Cookie Policy</p>
+                </div>
+            </footer>
+
+            <!-- Chat Widget -->
+            <div class="chat-widget">
+                <div class="chat-window" id="chatWindow">
+                    <div class="chat-header">
+                        <div class="chat-header-avatar">🤖</div>
+                        <div>
+                            <h4>Gate-AI Assistant</h4>
+                            <p>Online - Powered by AEGIS</p>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                                            Hello! I'm your AI gate assistant. I can help you choose the right automated gate system, provide instant quotes, or answer technical questions. What can I help you with today?
+                                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Type your message...">
+                        <button onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+                <button class="chat-button" id="chatToggle" onclick="toggleChat()">💬</button>
+            </div>
+
+            <!-- Toast -->
+            <div class="toast" id="toast"></div>
+
+            <script>
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Configurator Form
+            document.getElementById('gateForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('analyzeBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="loading"></span> Analyzing...';
+                btn.disabled = true;
+
+                // Simulate AI analysis
+                setTimeout(() => {
+                    // Calculate recommendation based on inputs
+                    const propertyType = document.getElementById('propertyType').value;
+                    const width = parseFloat(document.getElementById('width').value);
+                    const style = document.getElementById('style').value;
+                    const security = document.getElementById('security').value;
+                    const features = Array.from(document.querySelectorAll('input[name="features"]:checked')).map(cb => cb.value);
+
+                    // Determine gate type
+                    let gateType = 'Swing Gate (Dual Leaf)';
+                    let operator = 'Underground RAM (Quiet)';
+                    let basePrice = 15000;
+
+                    if (width > 6) {
+                        gateType = 'Sliding Gate (Cantilever)';
+                        operator = 'Industrial Track System';
+                        basePrice = 22000;
+                    } else if (propertyType === 'commercial') {
+                        gateType = 'Swing Gate (Heavy Duty)';
+                        basePrice = 18000;
+                    }
+
+                    // Add feature costs
+                    const featureCosts = {
+                        'biometric': 1200,
+                        'anpr': 1500,
+                        'intercom': 800,
+                        'solar': 2000,
+                        'app': 600,
+                        'ev': 1200,
+                        'led': 400,
+                        'wifi': 300
+                    };
+
+                    features.forEach(f => {
+                        basePrice += featureCosts[f] || 0;
+                    });
+
+                    // Security multiplier
+                    if (security === 'enhanced')
+                        basePrice *= 1.15;
+                    if (security === 'maximum')
+                        basePrice *= 1.3;
+
+                    // Update results
+                    document.getElementById('gateType').textContent = gateType;
+                    document.getElementById('operator').textContent = operator;
+                    document.getElementById('price').textContent = '£' + basePrice.toLocaleString();
+
+                    // Show results
+                    document.getElementById('resultPanel').classList.add('active');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                    // Scroll to results
+                    document.getElementById('resultPanel').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+
+                    showToast('AI analysis complete!');
+                }, 2000);
+            });
+
+            // Chat Widget
+            function toggleChat() {
+                const window = document.getElementById('chatWindow');
+                const toggle = document.getElementById('chatToggle');
+
+                if (window.classList.contains('active')) {
+                    window.classList.remove('active');
+                    toggle.innerHTML = '💬';
+                } else {
+                    window.classList.add('active');
+                    toggle.innerHTML = '✕';
+                }
+            }
+
+            function sendMessage() {
+                const input = document.getElementById('chatInput');
+                const message = input.value.trim();
+
+                if (!message)
+                    return;
+
+                // Add user message
+                addMessage(message, 'user');
+                input.value = '';
+
+                // Simulate AI response
+                setTimeout(() => {
+                    const responses = [
+                    "I'd be happy to help with that! Our swing gates start from £12,500 including installation.",
+                    "Great question! For a 4m opening, I'd recommend our dual-leaf swing gate with underground operators for a clean look.",
+                    "We offer 24/7 emergency support with remote diagnostics. Most issues can be resolved without a site visit.",
+                    "Our AI maintenance package uses predictive analytics to detect issues 30 days before failure. Would you like to learn more?",
+                    "You can book a free site survey at https://gate-a-mation.com/survey - our team will visit within 48 hours."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, 'bot');
+                }, 1000);
+            }
+
+            function addMessage(text, sender) {
+                const container = document.getElementById('chatMessages');
+                const message = document.createElement('div');
+                message.className = `message ${sender}`;
+                message.textContent = text;
+                container.appendChild(message);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter')
+                    sendMessage();
+            });
+
+            // Toast notification
+            function showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Feature checkbox styling
+            document.querySelectorAll('.feature-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'INPUT') {
+                        const input = this.querySelector('input');
+                        input.checked = !input.checked;
+                    }
+                    this.style.borderColor = this.querySelector('input').checked ? 'var(--primary)' : 'var(--border)';
+                    this.style.background = this.querySelector('input').checked ? 'rgba(30, 58, 95, 0.05)' : 'transparent';
+                });
+            });
+            </script>
+        </body>
+        </html>
+    </div>
+    <style>
+    :root, html, body {
+        height: auto !important;
+        max-height: 5000px !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        background: transparent !important;
+    }
+    </style>
+    <script>
+    (function() {
+        var lastHeight = 0;
+        var debounceTimer = null;
+        function reportHeight() {
+            var rect = document.body.getBoundingClientRect();
+            var h = Math.ceil(rect.height);
+            if (h !== lastHeight && h > 0) {
+                lastHeight = h;
+                window.parent.postMessage({
+                    type: "html-sandbox-height",
+                    height: h
+                }, "*");
+            }
+        }
+        new ResizeObserver(function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(reportHeight, 100);
+        }).observe(document.body);
+        window.addEventListener("load", function() {
+            window.parent.postMessage({
+                type: "html-sandbox-ready"
+            }, "*");
+        });
+        document.fonts && document.fonts.ready.then(function() {
+            reportHeight();
+        });
+    })();
+    </script>
+</body>
+</html>
+EOF
