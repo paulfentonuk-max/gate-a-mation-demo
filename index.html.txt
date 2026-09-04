@@ -1,4 +1,3 @@
-
 cat > gate-a-mation-demo.html << 'EOF'
 <!DOCTYPE html>
 <html data-host-mode="light">
