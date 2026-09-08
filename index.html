@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gate-A-Mation | AEGIS Intelligent Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #030508;
+            --bg-secondary: #0a0e17;
+            --bg-elevated: #111827;
+            --accent-cyan: #00d4ff;
+            --accent-gold: #ffd700;
+            --accent-purple: #a855f7;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
+                var(--bg-primary);
+            animation: meshFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes meshFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(1deg); }
+            66% { transform: translate(-20px, 20px) rotate(-1deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(3, 5, 8, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--bg-primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 4rem 4rem;
+            position: relative;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-badge::before {
+            content: '●';
+            color: var(--accent-cyan);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--bg-primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-glow:hover::before {
+            left: 100%;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .orb-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.6;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-cyan);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--accent-purple);
+            top: 30%;
+            left: 30%;
+            animation-delay: -2s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent-gold);
+            bottom: 20%;
+            right: 20%;
+            animation-delay: -4s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -20px) scale(1.1); }
+        }
+
+        .gate-preview {
+            position: relative;
+            z-index: 10;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .gate-preview h3 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .gate-image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(168,85,247,0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 4rem;
+            background: linear-gradient(to top, var(--bg-primary), transparent);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Design Your Gate Section */
+        .design-section {
+            padding: 6rem 4rem;
+            background: var(--bg-secondary);
+        }
+
+        .design-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .design-form {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .features-select {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .feature-option {
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .feature-option:hover,
+        .feature-option.active {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .design-result {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            display: none;
+        }
+
+        .design-result.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .generated-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(168,85,247,0.1));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .generated-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dashboard Section */
+        .dashboard-section {
+            padding: 6rem 4rem;
+            background: var(--bg-primary);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: #22c55e;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-indicator::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .btn-small:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .ai-response {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+
+        .ai-response.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* AEGIS Platform Section */
+        .aegis-section {
+            padding: 6rem 4rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+
+        .aegis-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .aegis-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .aegis-header h2 span {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .aegis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .aegis-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s;
+        }
+
+        .aegis-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .aegis-card.featured {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(168,85,247,0.1));
+        }
+
+        .aegis-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .aegis-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .aegis-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .benefit-tag {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-cyan);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container,
+            .design-container {
+                grid-template-columns: 1fr;
+            }
+
+            .aegis-card.featured {
+                grid-column: span 1;
+            }
+
+            .stats-container {
+                flex-wrap: wrap;
+                gap: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav,
+            .hero,
+            .design-section,
+            .dashboard-section,
+            .aegis-section {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Gate-A-Mation</a>
+        <ul class="nav-links">
+            <li><a href="#design">Design Your Gate</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#aegis">AEGIS Platform</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#design" class="nav-cta">Get Started</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">AEGIS Platform v2.0 Live</div>
+                <h1>Intelligent<br><span>Gate Systems</span></h1>
+                <p class="hero-subtitle">
+                    AI-powered automation with edge computing. 87% local processing, 
+                    99.9% uptime, and predictive maintenance that prevents failures 30 days in advance.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#design" class="btn-glow">Design Your Gate</a>
+                    <a href="#aegis" class="btn-outline">Explore AEGIS</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="orb-container">
+                    <div class="orb orb-1"></div>
+                    <div class="orb orb-2"></div>
+                    <div class="orb orb-3"></div>
+                </div>
+                <div class="gate-preview">
+                    <h3>AI-Generated Preview</h3>
+                    <div class="gate-image-placeholder">🚪</div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                        Powered by Venice AI
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="stats-bar">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-value">37+</div>
+                    <div class="stat-label">Years</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">15K+</div>
+                    <div class="stat-label">Installations</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">42%</div>
+                    <div class="stat-label">Cost Savings</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Your Gate Section -->
+    <section class="design-section" id="design">
+        <div class="section-header">
+            <span class="section-label">AI Configurator</span>
+            <h2 class="section-title">Design Your Perfect Gate</h2>
+            <p class="section-subtitle">
+                Describe your requirements and our AI will generate a custom design with specifications
+            </p>
+        </div>
+        <div class="design-container">
+            <div class="design-form">
+                <form id="gateDesignForm">
+                    <div class="form-group">
+                        <label>Property Type</label>
+                        <select id="propertyType" required>
+                            <option value="">Select...</option>
+                            <option value="residential">Residential Home</option>
+                            <option value="estate">Private Estate</option>
+                            <option value="commercial">Commercial Property</option>
+                            <option value="industrial">Industrial Site</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Opening Width (meters)</label>
+                        <input type="number" id="gateWidth" min="1" max="20" step="0.1" placeholder="e.g., 4.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Style Preference</label>
+                        <select id="gateStyle" required>
+                            <option value="">Select...</option>
+                            <option value="modern">Modern / Contemporary</option>
+                            <option value="traditional">Traditional / Classic</option>
+                            <option value="minimalist">Minimalist</option>
+                            <option value="ornate">Ornate / Decorative</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Smart Features</label>
+                        <div class="features-select">
+                            <div class="feature-option" onclick="toggleFeature(this)">Biometric Access</div>
+                            <div class="feature-option" onclick="toggleFeature(this)">ANPR Camera</div>
+                            <div class="feature-option" onclick="toggleFeature(this)">Video Intercom</div>
+                            <div class="feature-option" onclick="toggleFeature(this)">Solar Power</div>
+                            <div class="feature-option" onclick="toggleFeature(this)">Smartphone App</div>
+                            <div class="feature-option" onclick="toggleFeature(this)">EV Charging</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-glow" style="width: 100%;">
+                        Generate AI Design
+                    </button>
+                </form>
+            </div>
+            <div class="design-result" id="designResult">
+                <div class="generated-image" id="generatedImage">
+                    <span style="font-size: 5rem;">🏰</span>
+                </div>
+                <h3>AI-Generated Specification</h3>
+                <div id="specificationText" style="color: var(--text-secondary); line-height: 1.8;">
+                    <!-- Populated by JavaScript -->
+                </div>
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(0,212,255,0.1); border-radius: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Estimated Investment</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan);" id="estimatedPrice">£18,500</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                        Includes installation, 2-year warranty, and AI maintenance package
+                    </p>
+                </div>
+                <button class="btn-glow" style="width: 100%; margin-top: 1.5rem;">
+                    Request Detailed Quote
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-section" id="dashboard">
+        <div class="section-header">
+            <span class="section-label">Maintenance Dashboard</span>
+            <h2 class="section-title">AI-Powered Monitoring</h2>
+            <p class="section-subtitle">
+                Real-time diagnostics and predictive maintenance for your gate systems
+            </p>
+        </div>
+        <div class="dashboard-grid">
+            <!-- System Health Card -->
+            <div class="dashboard-card">
+                <h3>🔧 System Health</h3>
+                <div class="status-indicator">All Systems Operational</div>
+                <div class="metric-row">
+                    <span class="metric-label">Motor Temperature</span>
+                    <span class="metric-value">42°C</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Cycle Count (Today)</span>
+                    <span class="metric-value">47</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Last Service</span>
+                    <span class="metric-value">14 days ago</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Battery Status</span>
+                    <span class="metric-value">98%</span>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn-small" onclick="addDummyData()">Add Test Data</button>
+                    <button class="btn-small" onclick="runDiagnostics()">Run Diagnostics</button>
+                </div>
+                <div class="ai-response" id="aiResponse">
+                    <strong style="color: var(--accent-cyan);">AI Analysis:</strong>
+                    <p id="aiResponseText" style="margin-top: 0.5rem;"></p>
+                </div>
+            </div>
+
+            <!-- Predictive Maintenance Card -->
+            <div class="dashboard-card">
+                <h3>🔮 Predictive Insights</h3>
+                <div class="status-indicator" style="background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.3); color: #fbbf24;">
+                    Maintenance Due in 12 Days
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Bearing Health</span>
+                    <span class="metric-value" style="color: #22c55e;">94%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Gearbox Condition</span>
+                    <span class="metric-value" style="color: #22c55e;">97%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Safety Systems</span>
+                    <span class="metric-value" style="color: #22c55e;">100%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Predicted Lifespan</span>
+                    <span class="metric-value">18+ years</span>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn-small" onclick="generatePrediction()">Generate Prediction</button>
+                    <button class="btn-small" onclick="scheduleMaintenance()">Schedule Service</button>
+                </div>
+                <div class="ai-response" id="predictionResponse">
+                    <strong style="color: var(--accent-cyan);">AI Prediction:</strong>
+                    <p id="predictionText" style="margin-top: 0.5rem;"></p>
+                </div>
+            </div>
+
+            <!-- Energy Monitoring Card -->
+            <div class="dashboard-card">
+                <h3>⚡ Energy Monitor</h3>
+                <div class="status-indicator" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: #22c55e;">
+                    Solar: Active
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Today's Consumption</span>
+                    <span class="metric-value">0.8 kWh</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Solar Generated</span>
+                    <span class="metric-value">2.4 kWh</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Grid Export</span>
+                    <span class="metric-value">+1.6 kWh</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Cost Savings (30d)</span>
+                    <span class="metric-value" style="color: #22c55e;">£47.20</span>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn-small">View Report</button>
+                    <button class="btn-small">Export Data</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AEGIS Platform Section -->
+    <section class="aegis-section" id="aegis">
+        <div class="aegis-header">
+            <span class="section-label">Platform Architecture</span>
+            <h2>The <span>AEGIS</span> Platform</h2>
+            <p class="section-subtitle">
+                Privacy-first intelligent automation with edge computing architecture
+            </p>
+        </div>
+        <div class="aegis-grid">
+            <div class="aegis-card featured">
+                <div class="aegis-icon">🧠</div>
+                <h3>AROL Context Engine</h3>
+                <p>
+                    Adaptive Response & Optimization Layer delivers personalized gate operation 
+                    while reducing AI costs by 90% through intelligent context compression and caching. 
+                    Processes 12,000 tokens with optimized memory management.
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <span class="benefit-tag">90% Cost Reduction</span>
+                    <span class="benefit-tag">Sub-100ms Latency</span>
+                    <span class="benefit-tag">Edge Processing</span>
+                </div>
+            </div>
+            
+            <div class="aegis-card">
+                <div class="aegis-icon">🔒</div>
+                <h3>SecureBridge Protocol</h3>
+                <p>
+                    Zero-knowledge encrypted transport with WebRTC and AES-256-GCM encryption. 
+                    ECDH key exchange ensures perfect forward secrecy for all communications.
+                </p>
+                <span class="benefit-tag">Military-Grade Encryption</span>
+            </div>
+            
+            <div class="aegis-card">
+                <div class="aegis-icon">⚡</div>
+                <h3>EdgeShield AI</h3>
+                <p>
+                    On-device inference with local vector databases. 87% of processing happens 
+                    locally, ensuring your property data never leaves the device.
+                </p>
+                <span class="benefit-tag">GDPR Compliant</span>
+                <span class="benefit-tag">Zero Data Exfiltration</span>
+            </div>
+            
+            <div class="aegis-card">
+                <div class="aegis-icon">🛡️</div>
+                <h3>PolicyEngine DLP</h3>
+                <p>
+                    Dynamic data loss prevention with natural language policy creation. 
+                    Real-time compliance monitoring and automated threat detection.
+                </p>
+                <span class="benefit-tag">Real-time Monitoring</span>
+            </div>
+            
+            <div class="aegis-card">
+                <div class="aegis-icon">📊</div>
+                <h3>Predictive Analytics</h3>
+                <p>
+                    Machine learning models analyze vibration patterns, current draw, and 
+                    temperature trends to predict failures 30 days in advance.
+                </p>
+                <span class="benefit-tag">30-Day Prediction</span>
+                <span class="benefit-tag">99.7% Accuracy</span>
+            </div>
+        </div>
+
+        <!-- Benefits Breakdown -->
+        <div style="max-width: 1200px; margin: 4rem auto 0; padding: 0 2rem;">
+            <h3 style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Verified Business Benefits</h3>
+            
+            <div class="aegis-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="aegis-card">
+                    <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">💰 Financial Impact</h4>
+                    <ul style="color: var(--text-secondary); line-height: 2; list-style: none;">
+                        <li>✓ 42% reduction in 30-year TCO</li>
+                        <li>✓ £26,200 lifetime savings</li>
+                        <li>✓ 60% energy cost reduction</li>
+                        <li>✓ 70% fewer emergency callouts</li>
+                        <li>✓ 90% reduction in AI API costs</li>
+                    </ul>
+                </div>
+                
+                <div class="aegis-card">
+                    <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">🎯 Operational Excellence</h4>
+                    <ul style="color: var(--text-secondary); line-height: 2; list-style: none;">
+                        <li>✓ 95% customer retention rate</li>
+                        <li>✓ Instant remote diagnostics</li>
+                        <li>✓ Never locked out guarantee</li>
+                        <li>✓ AI learning personalization</li>
+                        <li>✓ Automated maintenance scheduling</li>
+                    </ul>
+                </div>
+                
+                <div class="aegis-card">
+                    <h4 style="color: var(--accent-cyan); margin-bottom: 1rem;">🌱 Environmental & Social</h4>
+                    <ul style="color: var(--text-secondary); line-height: 2; list-style: none;">
+                        <li>✓ 60% lower energy consumption</li>
+                        <li>✓ Solar integration ready</li>
+                        <li>✓ 50+ year material lifespan</li>
+                        <li>✓ 50% reduction in service vehicle emissions</li>
+                        <li>✓ Carbon footprint tracking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-logo">Gate-A-Mation</div>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Intelligent automated gate systems powered by the AEGIS Platform.<br>
+                Securing London and the Home Counties since 1988.
+            </p>
+            <ul class="footer-links">
+                <li><a href="#design">Design Your Gate</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#aegis">AEGIS Platform</a></li>
+                <li><a href="tel:01483747373">01483 747373</a></li>
+            </ul>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 2rem;">
+                11 Cherry Street, Woking, Surrey GU21 6EE<br>
+                © 2025 Gate-A-Mation Services Ltd. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+   <!-- JavaScript -->
+    <script>
+        // Feature Selection
+        function toggleFeature(element) {
+            element.classList.toggle('active');
+        }
+
+        // Gate Design Form Handler - DEMO MODE
+        document.getElementById('gateDesignForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const propertyType = document.getElementById('propertyType').value;
+            const width = document.getElementById('gateWidth').value;
+            const style = document.getElementById('gateStyle').value;
+            const features = Array.from(document.querySelectorAll('.feature-option.active')).map(f => f.textContent);
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<span class="loading"></span> Generating with AI...';
+            submitBtn.disabled = true;
+            
+            // Simulate AI generation delay (replace with real API call when you have a backend)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Generate specification text
+            const specifications = generateSpecification(propertyType, width, style, features);
+            document.getElementById('specificationText').innerHTML = specifications;
+            
+            // Show placeholder image (in production, this would be the Venice-generated image)
+            document.getElementById('generatedImage').innerHTML = `
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(168,85,247,0.1)); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px;">
+                    <span style="font-size: 4rem;">🏰</span>
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">AI-Generated Gate Design</p>
+                    <p style="color: var(--accent-cyan); font-size: 0.8rem; margin-top: 0.5rem;">${style} • ${width}m • ${propertyType}</p>
+                </div>
+            `;
+            
+            // Calculate price
+            const basePrice = calculatePrice(propertyType, width, features);
+            document.getElementById('estimatedPrice').textContent = '£' + basePrice.toLocaleString();
+            
+            // Show result
+            document.getElementById('designResult').classList.add('active');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            
+            // Scroll to result
+            document.getElementById('designResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        function generateSpecification(propertyType, width, style, features) {
+            const gateTypes = {
+                residential: 'Dual-leaf swing gate with underground operators',
+                estate: 'Tracked sliding gate with industrial-grade motors',
+                commercial: 'Bi-parting swing gate with high-cycle operators',
+                industrial: 'Cantilever sliding gate with heavy-duty track system'
+            };
+            
+            const materials = {
+                modern: 'Aluminum with powder-coated finish',
+                traditional: 'Wrought iron with hand-forged details',
+                minimalist: 'Stainless steel with brushed finish',
+                ornate: 'Cast aluminum with decorative scrollwork'
+            };
+            
+            let spec = `
+                <p><strong>Recommended Configuration:</strong></p>
+                <p>• <strong>Gate Type:</strong> ${gateTypes[propertyType] || 'Custom configuration'}</p>
+                <p>• <strong>Opening Width:</strong> ${width} meters</p>
+                <p>• <strong>Material & Finish:</strong> ${materials[style] || 'Premium grade aluminum'}</p>
+            `;
+            
+            if (features.length > 0) {
+                spec += `<p>• <strong>Smart Features:</strong> ${features.join(', ')}</p>`;
+            }
+            
+            spec += `
+                <p>• <strong>Safety Systems:</strong> 3D LiDAR sensors, photocells, safety edges</p>
+                <p>• <strong>Control System:</strong> AEGIS edge AI controller with smartphone app</p>
+                <p>• <strong>Power:</strong> 240V with battery backup and solar-ready</p>
+                <p>• <strong>Warranty:</strong> 2 years comprehensive, 10 years structural</p>
+            `;
+            
+            return spec;
+        }
+
+        function calculatePrice(propertyType, width, features) {
+            let base = 15000;
+            
+            // Property type multiplier
+            const multipliers = { residential: 1, estate: 1.5, commercial: 1.8, industrial: 2.2 };
+            base *= (multipliers[propertyType] || 1);
+            
+            // Width adjustment
+            if (width > 6) base *= 1.3;
+            
+            // Features
+            const featureCosts = {
+                'Biometric Access': 1200,
+                'ANPR Camera': 1500,
+                'Video Intercom': 800,
+                'Solar Power': 2000,
+                'Smartphone App': 600,
+                'EV Charging': 1200
+            };
+            
+            features.forEach(f => {
+                base += featureCosts[f] || 0;
+            });
+            
+            return Math.round(base / 100) * 100;
+        }
+
+        // Dashboard Functions - DEMO MODE
+        function addDummyData() {
+            const responseDiv = document.getElementById('aiResponse');
+            const responseText = document.getElementById('aiResponseText');
+            
+            const analyses = [
+                "Vibration analysis indicates bearing wear at 12% above baseline. Recommend inspection in 45 days. No immediate action required.",
+                "Motor current draw optimal. Temperature within normal parameters. System operating at 94% efficiency.",
+                "Safety edge calibration verified. Response time 0.3s (within spec). No faults detected in 30-day history."
+            ];
+            
+            responseText.textContent = analyses[Math.floor(Math.random() * analyses.length)];
+            responseDiv.classList.add('active');
+        }
+
+        function runDiagnostics() {
+            const responseDiv = document.getElementById('aiResponse');
+            const responseText = document.getElementById('aiResponseText');
+            
+            responseText.innerHTML = `
+                <strong>Diagnostic Complete:</strong><br>
+                ✓ Motor: Operational (42°C)<br>
+                ✓ Control Board: Operational<br>
+                ✓ Safety Sensors: 6/6 Active<br>
+                ✓ Battery: 98% Charged<br>
+                ✓ Network: Connected (24ms latency)<br><br>
+                <span style="color: #22c55e;">All systems nominal. No faults detected.</span>
+            `;
+            responseDiv.classList.add('active');
+        }
+
+        function generatePrediction() {
+            const responseDiv = document.getElementById('predictionResponse');
+            const responseText = document.getElementById('predictionText');
+            
+            const predictions = [
+                "Based on current usage patterns and vibration analysis, bearing replacement recommended in 180 days. Part availability: In stock. Estimated cost: £340.",
+                "Gearbox oil change due in 90 days. No abnormal wear detected. Continue current lubrication schedule.",
+                "Safety edge battery replacement recommended in 14 months. Current capacity at 87%. No immediate action required."
+            ];
+            
+            responseText.textContent = predictions[Math.floor(Math.random() * predictions.length)];
+            responseDiv.classList.add('active');
+        }
+
+        function scheduleMaintenance() {
+            alert('Maintenance scheduled! A confirmation email has been sent.\n\nDate: ' + new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB') + '\nTime: 09:00 - 12:00');
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
