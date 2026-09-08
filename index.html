@@ -1169,14 +1169,17 @@
         </div>
     </footer>
 
-   <!-- JavaScript -->
+ <!-- JavaScript -->
     <script>
+        // API Configuration - REPLACE WITH YOUR RENDER URL
+        const API_URL = 'https://gate-a-mation-api.onrender.com'; // <-- YOUR URL HERE
+
         // Feature Selection
         function toggleFeature(element) {
             element.classList.toggle('active');
         }
 
-        // Gate Design Form Handler - DEMO MODE
+        // Gate Design Form Handler - LIVE API MODE
         document.getElementById('gateDesignForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -1188,24 +1191,56 @@
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.innerHTML = '<span class="loading"></span> Generating with AI...';
+            submitBtn.innerHTML = '<span class="loading"></span> Generating with Venice AI...';
             submitBtn.disabled = true;
             
-            // Simulate AI generation delay (replace with real API call when you have a backend)
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Generate specification text
-            const specifications = generateSpecification(propertyType, width, style, features);
-            document.getElementById('specificationText').innerHTML = specifications;
-            
-            // Show placeholder image (in production, this would be the Venice-generated image)
-            document.getElementById('generatedImage').innerHTML = `
-                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(168,85,247,0.1)); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px;">
-                    <span style="font-size: 4rem;">🏰</span>
-                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">AI-Generated Gate Design</p>
-                    <p style="color: var(--accent-cyan); font-size: 0.8rem; margin-top: 0.5rem;">${style} • ${width}m • ${propertyType}</p>
-                </div>
-            `;
+            try {
+                // ==========================================
+                // CALL YOUR RENDER BACKEND - IMAGE GENERATION
+                // ==========================================
+                const imageRes = await fetch(`${API_URL}/api/generate-image`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ propertyType, width, style, features })
+                });
+                
+                const imageData = await imageRes.json();
+                
+                if (imageData.success) {
+                    document.getElementById('generatedImage').innerHTML = `
+                        <img src="${imageData.imageUrl}" 
+                             alt="AI Generated Gate Design" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+                        <p style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; color: var(--accent-cyan);">
+                            AI Generated • Venice
+                        </p>
+                    `;
+                } else {
+                    throw new Error('Image generation failed');
+                }
+                
+                // ==========================================
+                // CALL YOUR RENDER BACKEND - SPEC GENERATION
+                // ==========================================
+                const specRes = await fetch(`${API_URL}/api/generate-spec`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ propertyType, width, style, features })
+                });
+                
+                const specData = await specRes.json();
+                
+                if (specData.success) {
+                    document.getElementById('specificationText').innerHTML = formatSpecification(specData.specification);
+                } else {
+                    throw new Error('Spec generation failed');
+                }
+                
+            } catch (error) {
+                console.error('API Error:', error);
+                // Fallback to simulation if API fails
+                fallbackGeneration(propertyType, width, style, features);
+            }
             
             // Calculate price
             const basePrice = calculatePrice(propertyType, width, features);
@@ -1219,6 +1254,30 @@
             // Scroll to result
             document.getElementById('designResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
+
+        function formatSpecification(aiText) {
+            // Convert markdown-style text to HTML
+            return aiText
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/#{1,6}\s+(.*?)\n/g, '<h4>$1</h4>\n')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/^/g, '<p>')
+                .replace(/$/g, '</p>')
+                .replace(/<p><\/p>/g, '');
+        }
+
+        function fallbackGeneration(propertyType, width, style, features) {
+            const specifications = generateSpecification(propertyType, width, style, features);
+            document.getElementById('specificationText').innerHTML = specifications;
+            document.getElementById('generatedImage').innerHTML = `
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(168,85,247,0.1)); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px;">
+                    <span style="font-size: 4rem;">🏰</span>
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">AI Image Generation Unavailable</p>
+                    <p style="color: var(--accent-cyan); font-size: 0.8rem; margin-top: 0.5rem;">${style} • ${width}m • ${propertyType}</p>
+                </div>
+            `;
+        }
 
         function generateSpecification(propertyType, width, style, features) {
             const gateTypes = {
@@ -1235,23 +1294,19 @@
                 ornate: 'Cast aluminum with decorative scrollwork'
             };
             
-            let spec = `
-                <p><strong>Recommended Configuration:</strong></p>
-                <p>• <strong>Gate Type:</strong> ${gateTypes[propertyType] || 'Custom configuration'}</p>
-                <p>• <strong>Opening Width:</strong> ${width} meters</p>
-                <p>• <strong>Material & Finish:</strong> ${materials[style] || 'Premium grade aluminum'}</p>
-            `;
+            let spec = '<p><strong>Recommended Configuration:</strong></p>';
+            spec += `<p>• <strong>Gate Type:</strong> ${gateTypes[propertyType] || 'Custom configuration'}</p>`;
+            spec += `<p>• <strong>Opening Width:</strong> ${width} meters</p>`;
+            spec += `<p>• <strong>Material & Finish:</strong> ${materials[style] || 'Premium grade aluminum'}</p>`;
             
             if (features.length > 0) {
                 spec += `<p>• <strong>Smart Features:</strong> ${features.join(', ')}</p>`;
             }
             
-            spec += `
-                <p>• <strong>Safety Systems:</strong> 3D LiDAR sensors, photocells, safety edges</p>
-                <p>• <strong>Control System:</strong> AEGIS edge AI controller with smartphone app</p>
-                <p>• <strong>Power:</strong> 240V with battery backup and solar-ready</p>
-                <p>• <strong>Warranty:</strong> 2 years comprehensive, 10 years structural</p>
-            `;
+            spec += `<p>• <strong>Safety Systems:</strong> 3D LiDAR sensors, photocells, safety edges</p>`;
+            spec += `<p>• <strong>Control System:</strong> AEGIS edge AI controller with smartphone app</p>`;
+            spec += `<p>• <strong>Power:</strong> 240V with battery backup and solar-ready</p>`;
+            spec += `<p>• <strong>Warranty:</strong> 2 years comprehensive, 10 years structural</p>`;
             
             return spec;
         }
@@ -1259,14 +1314,11 @@
         function calculatePrice(propertyType, width, features) {
             let base = 15000;
             
-            // Property type multiplier
             const multipliers = { residential: 1, estate: 1.5, commercial: 1.8, industrial: 2.2 };
             base *= (multipliers[propertyType] || 1);
             
-            // Width adjustment
             if (width > 6) base *= 1.3;
             
-            // Features
             const featureCosts = {
                 'Biometric Access': 1200,
                 'ANPR Camera': 1500,
@@ -1283,48 +1335,71 @@
             return Math.round(base / 100) * 100;
         }
 
-        // Dashboard Functions - DEMO MODE
-        function addDummyData() {
+        // Dashboard Functions - LIVE API MODE
+        async function addDummyData() {
             const responseDiv = document.getElementById('aiResponse');
             const responseText = document.getElementById('aiResponseText');
             
-            const analyses = [
-                "Vibration analysis indicates bearing wear at 12% above baseline. Recommend inspection in 45 days. No immediate action required.",
-                "Motor current draw optimal. Temperature within normal parameters. System operating at 94% efficiency.",
-                "Safety edge calibration verified. Response time 0.3s (within spec). No faults detected in 30-day history."
-            ];
+            const telemetry = {
+                motorTemp: '42°C',
+                cyclesToday: 47,
+                lastService: '14 days ago',
+                batteryStatus: '98%',
+                vibrationRMS: 2.3,
+                currentDraw: '3.2A'
+            };
             
-            responseText.textContent = analyses[Math.floor(Math.random() * analyses.length)];
+            try {
+                const res = await fetch(`${API_URL}/api/diagnostic`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ telemetry })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    responseText.textContent = data.analysis;
+                } else {
+                    throw new Error('Diagnostic failed');
+                }
+            } catch (error) {
+                responseText.textContent = "Vibration analysis indicates bearing wear at 12% above baseline. Recommend inspection in 45 days. No immediate action required.";
+            }
+            
             responseDiv.classList.add('active');
         }
 
         function runDiagnostics() {
-            const responseDiv = document.getElementById('aiResponse');
-            const responseText = document.getElementById('aiResponseText');
-            
-            responseText.innerHTML = `
-                <strong>Diagnostic Complete:</strong><br>
-                ✓ Motor: Operational (42°C)<br>
-                ✓ Control Board: Operational<br>
-                ✓ Safety Sensors: 6/6 Active<br>
-                ✓ Battery: 98% Charged<br>
-                ✓ Network: Connected (24ms latency)<br><br>
-                <span style="color: #22c55e;">All systems nominal. No faults detected.</span>
-            `;
-            responseDiv.classList.add('active');
+            addDummyData(); // Same function for now
         }
 
-        function generatePrediction() {
+        async function generatePrediction() {
             const responseDiv = document.getElementById('predictionResponse');
             const responseText = document.getElementById('predictionText');
             
-            const predictions = [
-                "Based on current usage patterns and vibration analysis, bearing replacement recommended in 180 days. Part availability: In stock. Estimated cost: £340.",
-                "Gearbox oil change due in 90 days. No abnormal wear detected. Continue current lubrication schedule.",
-                "Safety edge battery replacement recommended in 14 months. Current capacity at 87%. No immediate action required."
-            ];
+            try {
+                const res = await fetch(`${API_URL}/api/diagnostic`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        telemetry: {
+                            usagePattern: '47 cycles/day',
+                            motorTemp: '42°C',
+                            bearingHealth: '94%'
+                        }
+                    })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    responseText.textContent = data.analysis;
+                } else {
+                    throw new Error('Prediction failed');
+                }
+            } catch (error) {
+                responseText.textContent = "Based on current usage patterns and vibration analysis, bearing replacement recommended in 180 days. Part availability: In stock. Estimated cost: £340.";
+            }
             
-            responseText.textContent = predictions[Math.floor(Math.random() * predictions.length)];
             responseDiv.classList.add('active');
         }
 
